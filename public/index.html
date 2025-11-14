@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+    
+    <div id="app-view" class="view" style="visibility: hidden;">
+        <header>
+            <h1><i class="fas fa-shield-alt"></i> Panel de Administración</h1>
+            <div class="user-info">
+                <span id="user-greeting">Hola, Admin!</span>
+                <button id="logout-button" aria-label="Cerrar Sesión"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <button class="nav-button active" data-target="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+            <button class="nav-button" data-target="transacciones"><i class="fas fa-exchange-alt"></i> Transacciones</button>
+            <button class="nav-button" data-target="usuarios"><i class="fas fa-users"></i> Usuarios</button>
+            <button class="nav-button" data-target="vehiculos"><i class="fas fa-car"></i> Vehículos</button>
+            <button class="nav-button" data-target="cajones"><i class="fas fa-parking"></i> Cajones</button>
+            <button class="nav-button" data-target="reportes"><i class="fas fa-file-alt"></i> Reportes</button>
+        </nav>
+
+        <main>
+            <div id="dashboard-section" class="content-section active">
+                <section class="widget-group">
+                    <div class="summary-widget"><h3><i class="fas fa-chart-pie"></i> Ocupación Actual</h3><p id="summary-ocupacion">-- / --</p><div class="progress-bar"><div id="summary-ocupacion-bar" class="progress"></div></div></div>
+                    <div class="summary-widget"><h3><i class="fas fa-dollar-sign"></i> Ingresos del Día</h3><p id="summary-ingresos">$ --.--</p></div>
+                    <div class="summary-widget"><h3><i class="fas fa-clock"></i> Estancia Promedio</h3><p id="summary-estancia-promedio">--h --m</p></div>
+                    <div class="summary-widget"><h3><i class="fas fa-car-side"></i> Entradas Hoy</h3><p id="summary-entradas-hoy">--</p></div>
+                </section>
+                <div class="dashboard-row">
+                    <div class="widget chart-widget"><h2><i class="fas fa-chart-line"></i> Ingresos por Hora (Hoy)</h2><canvas id="ingresos-chart"></canvas></div>
+                    <div class="widget chart-widget"><h2><i class="fas fa-chart-bar"></i> Ocupación por Tipo de Cajón</h2><canvas id="ocupacion-tipo-chart"></canvas></div>
+                </div>
+                <div class="dashboard-row">
+                     <section class="widget flex-grow-2"><h2><i class="fas fa-th-large"></i> Estado de Cajones en Tiempo Real</h2><div id="grid-estacionamiento" class="grid-container"></div></section>
+                     <section class="widget flex-grow-1"><h2><i class="fas fa-bell"></i> Notificaciones</h2><ul id="notifications-list" class="notifications"></ul></section>
+                </div>
+            </div>
+
+            <div id="transacciones-section" class="content-section">
+                 <section class="widget"><h2>Historial de Transacciones</h2><div class="table-actions"><input type="text" id="search-transacciones" placeholder="Buscar por placa..."><button id="btn-registrar-entrada" class="btn-primary"><i class="fas fa-plus"></i> Registrar Entrada Manual</button></div><div class="table-container"><table id="transacciones-table"><thead><tr><th>ID</th><th>Placa</th><th>Cajón</th><th>Entrada</th><th>Salida</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></section>
+            </div>
+
+            <div id="usuarios-section" class="content-section">
+                <section class="widget"><h2>Usuarios del Sistema</h2><div class="table-actions"><input type="text" id="search-usuarios" placeholder="Buscar por nombre o correo..."><button id="btn-add-usuario" class="btn-primary"><i class="fas fa-user-plus"></i> Añadir Usuario</button></div><div class="table-container"><table id="usuarios-table"><thead><tr><th>ID</th><th>Nombre Completo</th><th>Correo</th><th>Rol</th><th>Activo</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></section>
+            </div>
+
+            <div id="vehiculos-section" class="content-section">
+                 <section class="widget"><h2>Vehículos Registrados</h2><div class="table-actions"><input type="text" id="search-vehiculos" placeholder="Buscar por placa..."></div><div class="table-container"><table id="vehiculos-table"><thead><tr><th>Placa</th><th>Marca</th><th>Modelo</th><th>Tipo</th><th>Propietario</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></section>
+            </div>
+
+            <div id="cajones-section" class="content-section">
+                <section class="widget"><h2>Administración de Cajones</h2><div class="table-actions"><button id="btn-add-cajon" class="btn-primary"><i class="fas fa-plus-square"></i> Añadir Cajón</button></div><div class="table-container"><table id="cajones-table"><thead><tr><th>ID</th><th>Número</th><th>Nivel</th><th>Tipo</th><th>Tarifa/Hora</th><th>Disponible</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></section>
+            </div>
+            
+            <div id="reportes-section" class="content-section">
+                <section class="widget">
+                    <h2><i class="fas fa-file-download"></i> Generador de Reportes</h2>
+                    <form id="form-reportes" class="report-form">
+                        <div class="form-group"><label for="reporte-tipo">Tipo de Reporte:</label><select id="reporte-tipo"><option value="transacciones">Historial de Transacciones</option><option value="ocupacion">Reporte de Ocupación</option><option value="usuarios">Lista de Usuarios</option></select></div>
+                        <div class="form-group"><label for="reporte-fecha-inicio">Fecha de Inicio:</label><input type="date" id="reporte-fecha-inicio" required></div>
+                        <div class="form-group"><label for="reporte-fecha-fin">Fecha de Fin:</label><input type="date" id="reporte-fecha-fin" required></div>
+                        <div class="form-group"><label for="reporte-formato">Formato:</label><select id="reporte-formato"><option value="csv">CSV</option><option value="pdf">PDF</option></select></div>
+                        <button type="submit" class="btn-primary"><i class="fas fa-download"></i> Generar Reporte</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal-container" class="modal-container">
+        
+        <div id="modal-detalles-vehiculo" class="modal">
+            <div class="modal-header"><h2><i class="fas fa-car-side"></i> Detalles del Vehículo</h2><button class="btn-close-modal" aria-label="Cerrar modal">&times;</button></div>
+            <div class="modal-body modal-details-grid">
+                <div><h4>Información del Vehículo</h4><p><strong>Placa:</strong> <span id="detalle-placa">--</span></p><p><strong>Marca:</strong> <span id="detalle-marca">--</span></p><p><strong>Modelo:</strong> <span id="detalle-modelo">--</span></p><p><strong>Color:</strong> <span id="detalle-color">--</span></p><p><strong>Tipo:</strong> <span id="detalle-tipo">--</span></p></div>
+                <div><h4>Información del Propietario</h4><p><strong>Nombre:</strong> <span id="detalle-propietario-nombre">--</span></p><p><strong>Correo:</strong> <span id="detalle-propietario-correo">--</span></p><p><strong>Teléfono:</strong> <span id="detalle-propietario-telefono">--</span></p></div>
+            </div>
+        </div>
+
+        <div id="modal-usuario" class="modal">
+            <div class="modal-header"><h2 id="modal-usuario-titulo"></h2><button class="btn-close-modal" aria-label="Cerrar modal">&times;</button></div>
+            <div class="modal-body">
+                <form id="form-usuario">
+                    <input type="hidden" id="id_usuario_edit">
+                    <div class="form-group"><label for="usuario-nombre">Nombre:</label><input type="text" id="usuario-nombre" required></div>
+                    <div class="form-group"><label for="usuario-apellido-paterno">Apellido Paterno:</label><input type="text" id="usuario-apellido-paterno" required></div>
+                    <div class="form-group"><label for="usuario-correo">Correo Electrónico:</label><input type="email" id="usuario-correo" required></div>
+                    <div class="form-group"><label for="usuario-contrasena">Contraseña:</label><input type="password" id="usuario-contrasena" placeholder="Dejar en blanco para no cambiar" autocomplete="new-password"></div>
+                    <div class="form-group"><label for="usuario-rol">Rol:</label><select id="usuario-rol" required><option value="cliente">Cliente</option><option value="administrador">Administrador</option></select></div>
+                    <div class="modal-buttons"><button type="button" class="btn-secondary btn-close-modal">Cancelar</button><button type="submit" class="btn-primary">Guardar Cambios</button></div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modal-cajon" class="modal">
+            <div class="modal-header"><h2 id="modal-cajon-titulo"></h2><button class="btn-close-modal" aria-label="Cerrar modal">&times;</button></div>
+            <div class="modal-body">
+                <form id="form-cajon">
+                    <input type="hidden" id="id_cajon_edit">
+                    <div class="form-group"><label for="cajon-numero">Número de Cajón (ej. A-05):</label><input type="text" id="cajon-numero" required></div>
+                    <div class="form-group"><label for="cajon-nivel">Nivel:</label><input type="number" id="cajon-nivel" required></div>
+                    <div class="form-group"><label for="cajon-tipo">Tipo de Cajón:</label><select id="cajon-tipo" required><option value="estandar">Estandar</option><option value="discapacitado">Discapacitado</option><option value="electrico">Eléctrico</option><option value="motocicleta">Motocicleta</option></select></div>
+                    <div class="form-group"><label for="cajon-tarifa">Tarifa por Hora:</label><input type="number" step="0.50" id="cajon-tarifa" required></div>
+                    <div class="modal-buttons"><button type="button" class="btn-secondary btn-close-modal">Cancelar</button><button type="submit" class="btn-primary">Guardar Cambios</button></div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modal-entrada-manual" class="modal">
+            <div class="modal-header"><h2>Registrar Entrada Manual</h2><button class="btn-close-modal" aria-label="Cerrar modal">&times;</button></div>
+            <div class="modal-body">
+                <form id="form-entrada-manual">
+                    <div class="form-group"><label for="entrada-vehiculo">Seleccionar Vehículo (por placa):</label><select id="entrada-vehiculo" required></select></div>
+                    <div class="form-group"><label for="entrada-cajon">Seleccionar Cajón Disponible:</label><select id="entrada-cajon" required></select></div>
+                    <div class="modal-buttons"><button type="button" class="btn-secondary btn-close-modal">Cancelar</button><button type="submit" class="btn-primary">Registrar Entrada</button></div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

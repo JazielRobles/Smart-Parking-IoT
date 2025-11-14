@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-container {
+            background: var(--card-background);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        .login-container h1 { margin-bottom: 2rem; }
+        .login-container .form-group { text-align: left; margin-bottom: 1.5rem; }
+        #google-signin-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #fff;
+            color: #444;
+            border: 1px solid #ddd;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        #google-signin-button:hover { background-color: #f7f7f7; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .separator { display: flex; align-items: center; text-align: center; margin: 2rem 0; color: var(--border-color); }
+        .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-color); }
+        .separator:not(:empty)::before { margin-right: .25em; }
+        .separator:not(:empty)::after { margin-left: .25em; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1><i class="fas fa-parking"></i> Iniciar Sesión</h1>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" id="correo" required>
+            </div>
+            <div class="form-group">
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%;">Ingresar</button>
+        </form>
+        <div class="separator">O</div>
+        <div id="g_id_onload"
+             data-client_id="199977832849-8r4m1jq6v38s2a23gpnt0008062139g7.apps.googleusercontent.com"
+             data-callback="handleGoogleSignIn"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="signin_with"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
+    </div>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="login.js"></script>
+</body>
+</html>
